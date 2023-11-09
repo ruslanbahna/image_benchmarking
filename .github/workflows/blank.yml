@@ -113,8 +113,7 @@ jobs:
     steps:
     - name: Install binutils
       run: |
-        ping packages.microsoft.com
-        rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        curl -O https://packages.microsoft.com/cbl-mariner/2.0/prod/base/x86_64/binutils-2.35.2-5.cbl_mariner2.0.38.1.x86_64.rpm
         yum install -y binutils
 
     - name: Download Renaissance Suite JAR file
