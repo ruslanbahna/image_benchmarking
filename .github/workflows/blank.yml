@@ -47,7 +47,7 @@ jobs:
     steps:
     - name: Install wget
       run: |
-        cat /etc/yum.repos.d/CBL-Mariner-Official-Microsoft.repo
+        cat /etc/yum.repos.d/
         
     - name: Download Renaissance Suite JAR file
       run: |
