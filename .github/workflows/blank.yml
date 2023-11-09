@@ -143,32 +143,33 @@ jobs:
   #   - name: Run Renaissance benchmark
   #     run: |
   #       java -jar renaissance-gpl-0.15.0.jar functional
-                   
-runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/openjdk/jdk:21-distroless
+  
+    test-21-ubuntu:                 
+      runs-on: ubuntu-latest
+      container:
+        image: mcr.microsoft.com/openjdk/jdk:21-distroless
 
-    steps:
-    - name: Create Java source file
-      run: echo 'public class Main { public static void main(String[] args) { System.out.println("Hello, Distroless!"); } }' > Main.java
+      steps:
+      - name: Create Java source file
+        run: echo 'public class Main { public static void main(String[] args) { System.out.println("Hello, Distroless!"); } }' > Main.java
 
-    - name: Compile Java source
-      run: javac Main.java
+      - name: Compile Java source
+        run: javac Main.java
 
-    - name: Run jlink to build Java runtime
-      run: jlink --add-modules java.base --strip-debug --no-man-pages --no-header-files --compress=2 --output /javaruntime
+      - name: Run jlink to build Java runtime
+        run: jlink --add-modules java.base --strip-debug --no-man-pages --no-header-files --compress=2 --output /javaruntime
 
-    - name: Set up environment
-      run: echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
+      - name: Set up environment
+        run: echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
 
-    - name: Run Java application
-      run: java -cp . Main
+      - name: Run Java application
+        run: java -cp . Main
 
-    - name: Download Renaissance Suite JAR file
-      run: curl -O -L https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+      - name: Download Renaissance Suite JAR file
+        run: curl -O -L https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
 
-    - name: Run Renaissance benchmark
-      run: java -jar renaissance-gpl-0.15.0.jar functional
+      - name: Run Renaissance benchmark
+        run: java -jar renaissance-gpl-0.15.0.jar functional
 
 
   
