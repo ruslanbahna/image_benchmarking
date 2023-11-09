@@ -37,20 +37,20 @@ jobs:
 
       - name: Run Renaissance Benchmarks
         run: |
-          podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
+          podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-mariner /bin/sleep 30
           podman cp renaissance-gpl-0.15.0.jar my-jre-container:/opt/renaissance-gpl-0.15.0.jar
             # Run diagnostics commands to monitor memory usage
           podman exec my-jre-container /bin/bash -c "top -b -n 1"
           podman exec my-jre-container /bin/bash -c "free -m"
           podman exec my-jre-container /bin/bash -c "vmstat 1 5"
           podman exec my-jre-container /bin/bash -c "ps aux --sort=-%mem | head -n 10"
-          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic > future-generic.log 2>&1" || true
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
           podman start my-jre-container
-          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics > mnemonics.log 2>&1" || true
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
           podman start my-jre-container
-          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics > par-mnemonics.log 2>&1" || true
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
           podman start my-jre-container
-          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble > rx-scrabble.log 2>&1"
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble > scrabble.log 2>&1" || true
           podman start my-jre-container
       - name: Generate Renaissance Report
@@ -58,13 +58,13 @@ jobs:
           #podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
           podman stop my-jre-container
 
-      - name: Upload Logs
-        uses: actions/upload-artifact@v2
-        with:
-            name: renaissance-logs
-            path: |
-              future-generic.log
-              mnemonics.log
-              par-mnemonics.log
-              rx-scrabble.log
-              scrabble.log
+      # - name: Upload Logs
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #       name: renaissance-logs
+      #       path: |
+      #         future-generic.log
+      #         mnemonics.log
+      #         par-mnemonics.log
+      #         rx-scrabble.log
+      #         scrabble.log
