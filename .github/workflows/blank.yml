@@ -71,6 +71,41 @@ jobs:
     - name: Run Renaissance benchmark
       run: |
         java -jar renaissance-gpl-0.15.0.jar functional
+           
+  test-eclipse-temurin-21-alpine:
+    runs-on: ubuntu-latest
+    container:
+      image: eclipse-temurin:21
+
+    steps:
+    # - name: Install wget
+    #   run: |
+    #     apt update
+    #     apt install -y wget
+
+    - name: Download Renaissance Suite JAR file
+      run: |
+        wget https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar -O renaissance-gpl-0.15.0.jar
+
+    - name: Build Java runtime with jlink
+      run: |
+        jlink \
+          --add-modules java.base \
+          --strip-debug \
+          --no-man-pages \
+          --no-header-files \
+          --compress=2 \
+          --output /javaruntime
+
+    - name: Set up environment
+      run: |
+        echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
+
+    - name: Run Renaissance benchmark
+      run: |
+        java -jar renaissance-gpl-0.15.0.jar functional
+
+
   
 
 
