@@ -75,11 +75,20 @@ jobs:
         run: |
           #podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
           podman stop jre-container-21-mariner
-               
-      - name: Run Renaissance Benchmarks Distroless
+          
+      - name: Start the container and wait for it to run
         run: |
+          # Start the JRE container
           podman run -d --name jre-container-21-distroless mcr.microsoft.com/openjdk/jdk:21-distroless /bin/sleep 30
-          podman cp renaissance-gpl-0.15.0.jar jre-container-21-distroless:/opt/renaissance-gpl-0.15.0.jar
+
+          # Start a wait container to ensure jre-container is running
+          podman run --name wait-container -d busybox sh -c "until podman container exists jre-container-21-distroless; do sleep 1; done"
+        shell: bash         
+                  
+      - name: Copy files into the container
+        run: |
+          # Copy files into the JRE container
+          podman cp renaissance-gpl-0.15.0.jar jre-container-21-distroless:/opt/renaissance-gpl-0.15.0.jar      
           podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
           podman start jre-container-21-distroless
           podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
