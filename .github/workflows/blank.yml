@@ -147,7 +147,7 @@ jobs:
   test-21-distroless:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/openjdk/jdk:21-distrolesss
+      image: mcr.microsoft.com/openjdk/jdk:21-distroless
 
     steps:
     # - name: Install binutils
