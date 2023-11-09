@@ -1,118 +1,160 @@
-name: Renaissance Benchmark
+name: Java Workflow
 
 on:
   push:
     branches:
-      - main  # Adjust to your main branch name
+      - main
 
 jobs:
-  benchmark:
-    runs-on: ubuntu-latest  # You can specify different OS+JDK combinations here
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'  # Choose your desired JDK distribution, e.g., 'adopt' or 'openjdk'
-          java-version: '11'  # Specify the Java version
+    - name: Download Renaissance Suite JAR file
+      run: |
+        wget https://renaissance.dev/download/renaissance-gpl-0.15.0.jar -O renaissance-gpl-0.15.0.jar
 
-      - name: Install Podman
-        run: |
-          sudo apt update
-          sudo apt install -y podman  # Install Podman on Ubuntu, adjust for other Linux distributions
+    - name: Build Java runtime with jlink
+      run: |
+        jlink \
+          --add-modules java.base \
+          --strip-debug \
+          --no-man-pages \
+          --no-header-files \
+          --compress=2 \
+          --output /javaruntime
 
-      - name: Download Renaissance JAR
-        run: |
-          wget https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar -O renaissance-gpl-0.15.0.jar
-        working-directory: ${{ github.workspace }}
+    - name: Set up environment
+      run: |
+        echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
 
-      - name: Debugging - List Working Directory
-        run: ls
+    - name: Run Renaissance benchmark
+      run: |
+        java -jar renaissance-gpl-0.15.0.jar <benchmarks>
 
-      - name: Debugging - Check File Existence
-        run: test -f renaissance-gpl-0.15.0.jar && echo "File exists" || echo "File does not exist"
 
-      # - name: Run Renaissance Benchmarks Ubuntu
-      #   run: |
-      #     podman run -d --name jre-container-21-ubuntu mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
-      #     podman cp renaissance-gpl-0.15.0.jar jre-container-21-ubuntu:/opt/renaissance-gpl-0.15.0.jar
-      #       # Run diagnostics commands to monitor memory usage
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "top -b -n 1"
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "free -m"
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "vmstat 1 5"
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "ps aux --sort=-%mem | head -n 10"
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
-      #     podman start jre-container-21-ubuntu
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
-      #     podman start jre-container-21-ubuntu
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
-      #     podman start jre-container-21-ubuntu
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
-      #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
-      #     podman start jre-container-21-ubuntu
-      # - name: Generate Renaissance Report
-      #   run: |
-      #     #podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
-      #     podman stop jre-container-21-ubuntu
+
+# name: Renaissance Benchmark
+
+# on:
+#   push:
+#     branches:
+#       - main  # Adjust to your main branch name
+
+# jobs:
+#   benchmark:
+#     runs-on: ubuntu-latest  # You can specify different OS+JDK combinations here
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Set up Java
+#         uses: actions/setup-java@v2
+#         with:
+#           distribution: 'adopt'  # Choose your desired JDK distribution, e.g., 'adopt' or 'openjdk'
+#           java-version: '11'  # Specify the Java version
+
+#       - name: Install Podman
+#         run: |
+#           sudo apt update
+#           sudo apt install -y podman  # Install Podman on Ubuntu, adjust for other Linux distributions
+
+#       - name: Download Renaissance JAR
+#         run: |
+#           wget https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar -O renaissance-gpl-0.15.0.jar
+#         working-directory: ${{ github.workspace }}
+
+#       - name: Debugging - List Working Directory
+#         run: ls
+
+#       - name: Debugging - Check File Existence
+#         run: test -f renaissance-gpl-0.15.0.jar && echo "File exists" || echo "File does not exist"
+
+#       # - name: Run Renaissance Benchmarks Ubuntu
+#       #   run: |
+#       #     podman run -d --name jre-container-21-ubuntu mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
+#       #     podman cp renaissance-gpl-0.15.0.jar jre-container-21-ubuntu:/opt/renaissance-gpl-0.15.0.jar
+#       #       # Run diagnostics commands to monitor memory usage
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "top -b -n 1"
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "free -m"
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "vmstat 1 5"
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "ps aux --sort=-%mem | head -n 10"
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
+#       #     podman start jre-container-21-ubuntu
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
+#       #     podman start jre-container-21-ubuntu
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
+#       #     podman start jre-container-21-ubuntu
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
+#       #     podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
+#       #     podman start jre-container-21-ubuntu
+#       # - name: Generate Renaissance Report
+#       #   run: |
+#       #     #podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
+#       #     podman stop jre-container-21-ubuntu
      
-      # - name: Run Renaissance Benchmarks Mariner
-      #   run: |
-      #     podman run -d --name jre-container-21-mariner mcr.microsoft.com/openjdk/jdk:21-mariner /bin/sleep 30
-      #     podman cp renaissance-gpl-0.15.0.jar jre-container-21-mariner:/opt/renaissance-gpl-0.15.0.jar
-      #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
-      #     podman start jre-container-21-mariner
-      #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
-      #     podman start jre-container-21-mariner
-      #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
-      #     podman start jre-container-21-mariner
-      #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
-      #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
-      #     podman start jre-container-21-mariner
-      # - name: Generate Renaissance Report
-      #   run: |
-      #     #podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
-      #     podman stop jre-container-21-mariner
+#       # - name: Run Renaissance Benchmarks Mariner
+#       #   run: |
+#       #     podman run -d --name jre-container-21-mariner mcr.microsoft.com/openjdk/jdk:21-mariner /bin/sleep 30
+#       #     podman cp renaissance-gpl-0.15.0.jar jre-container-21-mariner:/opt/renaissance-gpl-0.15.0.jar
+#       #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
+#       #     podman start jre-container-21-mariner
+#       #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
+#       #     podman start jre-container-21-mariner
+#       #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
+#       #     podman start jre-container-21-mariner
+#       #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
+#       #     podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
+#       #     podman start jre-container-21-mariner
+#       # - name: Generate Renaissance Report
+#       #   run: |
+#       #     #podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
+#       #     podman stop jre-container-21-mariner
           
-      - name: Start the container and wait for it to run
-        run: |
-          # Start the JRE container
-          podman run -d --name jre-container-21-distroless mcr.microsoft.com/openjdk/jdk:21-distroless /bin/sleep 30
+#       - name: Start the container and wait for it to run
+#         run: |
+#           # Start the JRE container
+#           podman run -d --name jre-container-21-distroless mcr.microsoft.com/openjdk/jdk:21-distroless /bin/sleep 30
 
-          # Start a wait container to ensure jre-container is running
-          podman run --name wait-container -d busybox sh -c "until podman container exists jre-container-21-distroless && podman container inspect jre-container-21-distroless --format '{{.State.Status}}' | grep -q running; do sleep 1; done"
-        shell: bash         
+#           # Start a wait container to ensure jre-container is running
+#           podman run --name wait-container -d busybox sh -c "until podman container exists jre-container-21-distroless && podman container inspect jre-container-21-distroless --format '{{.State.Status}}' | grep -q running; do sleep 1; done"
+#         shell: bash         
                   
-      - name: Copy files into the container
-        run: |
-          # Copy files into the JRE container
-          podman cp renaissance-gpl-0.15.0.jar jre-container-21-distroless:/opt/renaissance-gpl-0.15.0.jar      
-          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
-          podman start jre-container-21-distroless
-          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
-          podman start jre-container-21-distroless
-          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
-          podman start jre-container-21-distroless
-          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
-          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
-          podman start jre-container-21-distroless
-      - name: Generate Renaissance Report
-        run: |
-          #podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
-          podman stop jre-container-21-distroless
+#       - name: Copy files into the container
+#         run: |
+#           # Copy files into the JRE container
+#           podman cp renaissance-gpl-0.15.0.jar jre-container-21-distroless:/opt/renaissance-gpl-0.15.0.jar      
+#           podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
+#           podman start jre-container-21-distroless
+#           podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
+#           podman start jre-container-21-distroless
+#           podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
+#           podman start jre-container-21-distroless
+#           podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
+#           podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
+#           podman start jre-container-21-distroless
+#       - name: Generate Renaissance Report
+#         run: |
+#           #podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
+#           podman stop jre-container-21-distroless
           
           
 
 
-      # - name: Upload Logs
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #       name: renaissance-logs
-      #       path: |
-      #         future-generic.log
-      #         mnemonics.log
-      #         par-mnemonics.log
-      #         rx-scrabble.log
-      #         scrabble.log
+#       # - name: Upload Logs
+#       #   uses: actions/upload-artifact@v2
+#       #   with:
+#       #       name: renaissance-logs
+#       #       path: |
+#       #         future-generic.log
+#       #         mnemonics.log
+#       #         par-mnemonics.log
+#       #         rx-scrabble.log
+#       #         scrabble.log
