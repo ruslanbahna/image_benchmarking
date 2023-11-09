@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Install wget and JAR file
       run: |
-        apt-get update && apt-get install -y --no-install-recommends curl
+        apt-get update && apt-get install -y --no-install-recommends wget
         wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
 
   #   - name: Build Java runtime with jlink
