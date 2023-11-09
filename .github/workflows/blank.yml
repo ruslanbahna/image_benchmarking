@@ -37,7 +37,11 @@ jobs:
     - name: Check installation time of packages
       run: |
         echo "Installation time of installed packages:"
-        ls -lt --time=ctime /var/lib/dpkg/info/*.list
+        for package in /var/lib/dpkg/info/*.list; do
+          package_name=$(basename "$package" .list)
+          install_time=$(stat -c %y "$package" | cut -d'.' -f1)
+          echo "$package_name: $install_time"
+        done
         
   #   - name: Build Java runtime with jlink
   #     run: |
