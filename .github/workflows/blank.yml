@@ -113,8 +113,10 @@ jobs:
     steps:
     - name: Install binutils
       run: |
-        curl -O https://packages.microsoft.com/cbl-mariner/2.0/prod/base/x86_64/binutils-2.35.2-5.cbl_mariner2.0.38.1.x86_64.rpm
-        ls /etc/yum.repos.d/
+        sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-extras.repo
+        sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-microsoft.repo
+        sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-official-base.repo
+        yum install -y binutils
 
     # - name: Download Renaissance Suite JAR file
     #   run: |
