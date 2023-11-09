@@ -14,10 +14,12 @@ jobs:
     steps:
     - name: Install wget and JAR file
       run: |
-        time {
-          apt-get update && apt-get install -y --no-install-recommends wget
-          wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
-        }
+        start_time=$(date +%s)
+        apt-get update && apt-get install -y --no-install-recommends wget
+        wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+        end_time=$(date +%s)
+        elapsed_time=$((end_time - start_time))
+        echo "Time taken: $elapsed_time seconds"
    
     - name: Check if JAR file exists
       run: |
