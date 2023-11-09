@@ -41,7 +41,7 @@ jobs:
 
     - name: Run Renaissance benchmark
       run: |
-        java -jar renaissance-gpl-0.15.0.jar future-genetic
+        java -jar renaissance-gpl-0.15.0.jar funtional
 
 
 
