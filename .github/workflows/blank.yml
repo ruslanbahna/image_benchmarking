@@ -45,6 +45,10 @@ jobs:
       image: mcr.microsoft.com/openjdk/jdk:21-mariner
 
     steps:  
+    - name: install binutils
+      run: |
+        yum install -y binutils
+        
     - name: Download Renaissance Suite JAR file
       run: |
        curl -o renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
