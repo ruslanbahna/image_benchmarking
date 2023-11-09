@@ -24,6 +24,11 @@ jobs:
           sudo apt update
           sudo apt install -y podman  # Install Podman on Ubuntu, adjust for other Linux distributions
 
+      - name: Download Renaissance JAR
+        run: |
+          wget https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar -O renaissance-gpl-0.15.0.jar
+        working-directory: ${{ github.workspace }}
+
       - name: Run Renaissance Benchmarks
         run: |
           podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
