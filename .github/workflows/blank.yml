@@ -58,9 +58,13 @@ jobs:
       run: |
         echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
 
-    - name: Run Renaissance benchmark
+    - name: Measure time for running the Renaissance benchmark
       run: |
-         time java -jar renaissance-gpl-0.15.0.jar functional
+        start_time=$(date +%s)
+        java -jar renaissance-gpl-0.15.0.jar functional
+        end_time=$(date +%s)
+        elapsed_time=$((end_time - start_time))
+        echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
    
   # test-eclipse-temurin-21:
   #   runs-on: ubuntu-latest
