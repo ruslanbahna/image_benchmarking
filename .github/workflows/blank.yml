@@ -32,8 +32,8 @@ jobs:
 
     - name: Display size of JAR file
       run: |
-        jar_size=$(du -h renaissance-gpl-0.15.0.jar | cut -f1)
-        echo "Size of JAR file: $jar_size"
+        jar_size_kb=$(du -k renaissance-gpl-0.15.0.jar | cut -f1)
+        echo "Size of JAR file: $jar_size_kb KB"
 
     - name: Check installed packages and their size
       run: |
@@ -42,15 +42,6 @@ jobs:
 
         installed_packages_size=$(dpkg-query -Wf '${Installed-Size}\n' | awk '{sum+=$1} END{print sum}')
         echo "Total size of installed packages: $installed_packages_size KB"
-
-    - name: Check installation time of packages
-      run: |
-        echo "Installation time of installed packages:"
-        for package in /var/lib/dpkg/info/*.list; do
-          package_name=$(basename "$package" .list)
-          install_time=$(stat -c %y "$package" | cut -d'.' -f1)
-          echo "$package_name: $install_time"
-        done
         
   #   - name: Build Java runtime with jlink
   #     run: |
