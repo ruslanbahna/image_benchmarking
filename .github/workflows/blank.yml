@@ -14,8 +14,10 @@ jobs:
     steps:
     - name: Install wget and JAR file
       run: |
-        apt-get update && apt-get install -y --no-install-recommends wget
-        wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+        time {
+          apt-get update && apt-get install -y --no-install-recommends wget
+          wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+        }
    
     - name: Check if JAR file exists
       run: |
@@ -25,6 +27,11 @@ jobs:
           echo "JAR file not found."
           exit 1
         fi
+
+    - name: Display size of JAR file
+      run: |
+        jar_size=$(du -h renaissance-gpl-0.15.0.jar | cut -f1)
+        echo "Size of JAR file: $jar_size"
 
     - name: Check installed packages and their size
       run: |
