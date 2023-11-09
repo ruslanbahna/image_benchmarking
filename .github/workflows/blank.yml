@@ -52,7 +52,7 @@ jobs:
     - name: Download and Install binutils
       run: |
         curl -O https://packages.microsoft.com/cbl-mariner/2.0/prod/base/x86_64/binutils-2.35.2-5.cbl_mariner2.0.38.1.x86_64.rpm
-        yum localinstall -y binutils-2.35.2-5.cbl_mariner2.0.38.1.x86_64.rpm
+        tdnf install -y binutils-2.35.2-5.cbl_mariner2.0.38.1.x86_64.rpm
    
     - name: Build Java runtime with jlink
       run: |
