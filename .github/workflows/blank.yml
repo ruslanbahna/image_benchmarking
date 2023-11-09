@@ -158,7 +158,7 @@ jobs:
     #     yum install -y binutils
     - name: Install Bash
       run: |
-        yum install -y bash
+        apk add --no-cache bash
         
     - name: Download Renaissance Suite JAR file
       run: |
