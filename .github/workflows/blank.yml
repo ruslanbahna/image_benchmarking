@@ -35,9 +35,9 @@ jobs:
       - name: Debugging - Check File Existence
         run: test -f renaissance-gpl-0.15.0.jar && echo "File exists" || echo "File does not exist"
 
-      - name: Run Renaissance Benchmarks
+      - name: Run Renaissance Benchmarks Ubuntu
         run: |
-          podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-mariner /bin/sleep 30
+          podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
           podman cp renaissance-gpl-0.15.0.jar my-jre-container:/opt/renaissance-gpl-0.15.0.jar
             # Run diagnostics commands to monitor memory usage
           podman exec my-jre-container /bin/bash -c "top -b -n 1"
@@ -57,6 +57,29 @@ jobs:
         run: |
           #podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
           podman stop my-jre-container
+     
+      - name: Run Renaissance Benchmarks Mariner
+        run: |
+          podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-mariner /bin/sleep 30
+          podman cp renaissance-gpl-0.15.0.jar my-jre-container:/opt/renaissance-gpl-0.15.0.jar
+            # Run diagnostics commands to monitor memory usage
+          podman exec my-jre-container /bin/bash -c "ps aux --sort=-%mem | head -n 10"
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
+          podman start my-jre-container
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
+          podman start my-jre-container
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
+          podman start my-jre-container
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble > scrabble.log 2>&1" || true
+          podman start my-jre-container
+      - name: Generate Renaissance Report
+        run: |
+          #podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
+          podman stop my-jre-container
+          
+          
+
 
       # - name: Upload Logs
       #   uses: actions/upload-artifact@v2
