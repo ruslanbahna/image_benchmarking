@@ -45,6 +45,7 @@ jobs:
           podman exec my-jre-container /bin/bash -c "vmstat 1 5"
           podman exec my-jre-container /bin/bash -c "ps aux --sort=-%mem | head -n 10"
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
+          podman start my-jre-container
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics"
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics"
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
