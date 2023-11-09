@@ -18,7 +18,7 @@ jobs:
 
     - name: Download Renaissance Suite JAR file
       run: |
-        wget https://renaissance.dev/download/renaissance-gpl-0.15.0.jar -O renaissance-gpl-0.15.0.jar
+        curl -o renaissance-gpl-0.15.0.jar https://renaissance.dev/download/renaissance-gpl-0.15.0.jar
 
     - name: Build Java runtime with jlink
       run: |
@@ -36,7 +36,8 @@ jobs:
 
     - name: Run Renaissance benchmark
       run: |
-        java -jar renaissance-gpl-0.15.0.jar <benchmarks>
+        java -jar renaissance-gpl-0.15.0.jar future-genetic
+
 
 
 
