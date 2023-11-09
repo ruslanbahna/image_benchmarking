@@ -113,6 +113,7 @@ jobs:
     steps:
     - name: Install binutils
       run: |
+        ping packages.microsoft.com
         rpm --import https://packages.microsoft.com/keys/microsoft.asc
         yum install -y binutils
 
