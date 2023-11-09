@@ -47,9 +47,7 @@ jobs:
     steps:
     - name: Install wget
       run: |
-        rpm --import https://packages.microsoft.com/keys/microsoft.asc
-        yum clean all
-        rpm --rebuilddb
+        rpm --import microsoft.asc
         yum update
         yum install -y wget
         
