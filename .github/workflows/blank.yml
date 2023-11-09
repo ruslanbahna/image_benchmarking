@@ -35,13 +35,13 @@ jobs:
         jar_size_kb=$(du -k renaissance-gpl-0.15.0.jar | cut -f1)
         echo "Size of JAR file: $jar_size_kb KB"
 
-    - name: Check installed packages and their size
+    - name: Check installed packages (excluding JAR file) and their size
       run: |
-        num_installed_packages=$(dpkg -l | grep ^ii | wc -l)
-        echo "Number of installed packages: $num_installed_packages"
+        num_installed_packages=$(dpkg -l | grep ^ii | grep -v renaissance-gpl-0.15.0.jar | wc -l)
+        echo "Number of installed packages (excluding JAR file): $num_installed_packages"
 
-        installed_packages_size=$(dpkg-query -Wf '${Installed-Size}\n' | awk '{sum+=$1} END{print sum}')
-        echo "Total size of installed packages: $installed_packages_size KB"
+        installed_packages_size=$(dpkg-query -Wf '${Installed-Size}\n' | grep -v renaissance-gpl-0.15.0.jar | awk '{sum+=$1} END{print sum}')
+        echo "Total size of installed packages (excluding JAR file): $installed_packages_size KB"
         
   #   - name: Build Java runtime with jlink
   #     run: |
