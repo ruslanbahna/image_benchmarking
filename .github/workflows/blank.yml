@@ -47,7 +47,7 @@ jobs:
     steps:
     - name: Install wget
       run: |
-        yum install -y wget
+        dnf install -y wget
         
     - name: Download Renaissance Suite JAR file
       run: |
