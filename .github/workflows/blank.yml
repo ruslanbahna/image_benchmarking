@@ -29,6 +29,12 @@ jobs:
           wget https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar -O renaissance-gpl-0.15.0.jar
         working-directory: ${{ github.workspace }}
 
+      - name: Debugging - List Working Directory
+        run: ls
+
+      - name: Debugging - Check File Existence
+        run: test -f renaissance-gpl-0.15.0.jar && echo "File exists" || echo "File does not exist"
+
       - name: Run Renaissance Benchmarks
         run: |
           podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
