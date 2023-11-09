@@ -15,7 +15,7 @@ jobs:
     - name: Display container size before installation
       run: |
         echo "Container size before installation:"
-        df -h /
+        df -h / | awk 'NR==2 {print $2, $3, $4, $5}'
       
     - name: Install wget and JAR file
       run: |
@@ -29,7 +29,7 @@ jobs:
     - name: Display container size after installation
       run: |
         echo "Container size after installation:"
-        df -h /
+        df -h / | awk 'NR==2 {print $2, $3, $4, $5}'
    
     - name: Check if JAR file exists
       run: |
