@@ -47,8 +47,9 @@ jobs:
     steps:
     - name: Install wget
       run: |
+        rpm --import https://packages.microsoft.com/keys/microsoft.asc
         yum update
-        yum install epel-release -y wget
+        yum install -y wget
         
     - name: Download Renaissance Suite JAR file
       run: |
