@@ -53,6 +53,8 @@ jobs:
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
           podman start my-jre-container
+      - name: Generate Renaissance Report
+        run: |
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
           podman stop my-jre-container
 
