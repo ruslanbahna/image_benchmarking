@@ -28,9 +28,11 @@ jobs:
 
     - name: Check installed packages and their size
       run: |
-        echo "Number of installed packages: $(dpkg -l | grep ^ii | wc -l)"
-        echo "Installed packages and their sizes:"
-        dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n
+        num_installed_packages=$(dpkg -l | grep ^ii | wc -l)
+        echo "Number of installed packages: $num_installed_packages"
+
+        installed_packages_size=$(dpkg-query -Wf '${Installed-Size}\n' | awk '{sum+=$1} END{print sum}')
+        echo "Total size of installed packages: $installed_packages_size KB"
 
     - name: Check installation time of packages
       run: |
