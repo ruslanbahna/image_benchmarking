@@ -51,7 +51,7 @@ jobs:
           podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
           podman start jre-container-21-ubuntu
           podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
-          podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble > scrabble.log 2>&1" || true
+          podman exec jre-container-21-ubuntu /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
           podman start jre-container-21-ubuntu
       - name: Generate Renaissance Report
         run: |
@@ -62,8 +62,6 @@ jobs:
         run: |
           podman run -d --name jre-container-21-mariner mcr.microsoft.com/openjdk/jdk:21-mariner /bin/sleep 30
           podman cp renaissance-gpl-0.15.0.jar jre-container-21-mariner:/opt/renaissance-gpl-0.15.0.jar
-            # Run diagnostics commands to monitor memory usage
-          podman exec jre-container-21-mariner /bin/bash -c "ps aux --sort=-%mem | head -n 10"
           podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
           podman start jre-container-21-mariner
           podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
@@ -71,12 +69,30 @@ jobs:
           podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
           podman start jre-container-21-mariner
           podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
-          podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble > scrabble.log 2>&1" || true
+          podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
           podman start jre-container-21-mariner
       - name: Generate Renaissance Report
         run: |
           #podman exec jre-container-21-mariner /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
           podman stop jre-container-21-mariner
+               
+      - name: Run Renaissance Benchmarks Distroless
+        run: |
+          podman run -d --name jre-container-21-distroless mcr.microsoft.com/openjdk/jdk:21-distroless /bin/sleep 30
+          podman cp renaissance-gpl-0.15.0.jar jre-container-21-distroless:/opt/renaissance-gpl-0.15.0.jar
+          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar future-genetic" || true
+          podman start jre-container-21-distroless
+          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar mnemonics" || true
+          podman start jre-container-21-distroless
+          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar par-mnemonics" || true
+          podman start jre-container-21-distroless
+          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar rx-scrabble"
+          podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scrabble" || true
+          podman start jre-container-21-distroless
+      - name: Generate Renaissance Report
+        run: |
+          #podman exec jre-container-21-distroless /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
+          podman stop jre-container-21-distroless
           
           
 
