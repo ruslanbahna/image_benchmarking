@@ -47,7 +47,9 @@ jobs:
     steps:
     - name: Install wget
       run: |
-        ls /etc/yum.repos.d/
+        cat /etc/yum.repos.d/mariner-extras.repo
+        cat /etc/yum.repos.d/mariner-microsoft.repo
+        cat /etc/yum.repos.d/mariner-official-base.repo
         
     - name: Download Renaissance Suite JAR file
       run: |
