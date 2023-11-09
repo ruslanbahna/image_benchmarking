@@ -47,9 +47,7 @@ jobs:
     steps:
     - name: Install wget
       run: |
-        rpm --import https://packages.microsoft.com/keys/microsoft.asc
-        yum update
-        yum install -y wget
+        cat /etc/yum.repos.d/CBL-Mariner-Official-Microsoft.repo
         
     - name: Download Renaissance Suite JAR file
       run: |
