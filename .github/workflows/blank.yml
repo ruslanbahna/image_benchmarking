@@ -1,0 +1,40 @@
+name: Renaissance Benchmark
+
+on:
+  push:
+    branches:
+      - main  # Adjust to your main branch name
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest  # You can specify different OS+JDK combinations here
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'  # Choose your desired JDK distribution, e.g., 'adopt' or 'openjdk'
+          java-version: '11'  # Specify the Java version
+
+      - name: Install Podman
+        run: |
+          sudo apt update
+          sudo apt install -y podman  # Install Podman on Ubuntu, adjust for other Linux distributions
+
+      - name: Run Renaissance Benchmarks
+        run: |
+          podman run -d mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
+          podman cp renaissance-gpl-0.15.0.jar my-jre-container:/opt/renaissance-gpl-0.15.0.jar
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scala-kmeans"
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar apache-spark"
+          podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
+          podman stop my-jre-container
+
+      - name: Upload Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: renaissance-report
+          path: renaissance/report  # Adjust the path to your report location
