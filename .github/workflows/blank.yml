@@ -38,7 +38,7 @@ jobs:
       - name: Run Renaissance Benchmarks
         run: |
           podman run -d --name my-jre-container mcr.microsoft.com/openjdk/jdk:21-ubuntu /bin/sleep 30
-          podman cp renaissance-gpl-0.15.0.jar my-jre-container::/opt/renaissance-gpl-0.15.0.jar
+          podman cp renaissance-gpl-0.15.0.jar my-jre-container:/opt/renaissance-gpl-0.15.0.jar
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar scala-kmeans"
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar apache-spark"
           podman exec my-jre-container /bin/bash -c "java -jar /opt/renaissance-gpl-0.15.0.jar report"
