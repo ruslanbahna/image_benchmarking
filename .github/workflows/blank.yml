@@ -156,7 +156,10 @@ jobs:
     #     sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-microsoft.repo
     #     sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-official-base.repo
     #     yum install -y binutils
-
+    - name: Install Bash
+      run: |
+        yum install -y bash
+        
     - name: Download Renaissance Suite JAR file
       run: |
           curl -O -L https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
