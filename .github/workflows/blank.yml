@@ -12,6 +12,11 @@ jobs:
       image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
 
     steps:
+    - name: Display container size before installation
+      run: |
+        echo "Container size before installation:"
+        df -h /
+      
     - name: Install wget and JAR file
       run: |
         start_time=$(date +%s)
@@ -20,6 +25,11 @@ jobs:
         end_time=$(date +%s)
         elapsed_time=$((end_time - start_time))
         echo "Time taken: $elapsed_time seconds"
+
+    - name: Display container size after installation
+      run: |
+        echo "Container size after installation:"
+        df -h /
    
     - name: Check if JAR file exists
       run: |
