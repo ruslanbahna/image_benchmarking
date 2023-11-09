@@ -47,7 +47,7 @@ jobs:
     steps:  
     - name: install binutils
       run: |
-        yum install -y binutils
+        yum --nogpgcheck install -y binutils
         
     - name: Download Renaissance Suite JAR file
       run: |
