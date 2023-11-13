@@ -1,8 +1,8 @@
 # Use a base image with a shell to create the custom JRE
-FROM ubuntu:latest AS jre-builder
+FROM alpine:latest AS jre-builder
 
 # Install the necessary tools
-RUN apt-get update && apt-get install -y openjdk-17-jdk-headless binutils
+RUN apk add openjdk17-jdk binutils 
 
 # Create a custom JRE using jlink
 RUN jlink \
