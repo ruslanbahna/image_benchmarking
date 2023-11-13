@@ -2,7 +2,7 @@
 FROM ubuntu:20.04 AS jre-builder
 
 # Install the necessary tools
-RUN apt-get update && apt-get install -y openjdk-17-jdk-headless
+RUN apt-get update && apt-get install -y openjdk-17-jdk-headless binutils
 
 # Create a custom JRE using jlink
 RUN jlink \
