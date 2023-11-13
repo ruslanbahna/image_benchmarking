@@ -148,6 +148,7 @@ jobs:
     steps:
     - name: Install binutils
       run: |
+        whoami
         yum install -y --setopt install_weak_deps=0 binutils
 
     - name: Download Renaissance Suite JAR file
