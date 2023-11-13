@@ -1,7 +1,7 @@
-# Stage 1: Create Custom JRE Image
-FROM openjdk:21 as jre-builder
+# Use the distroless image as the base image
+FROM mcr.microsoft.com/openjdk/jdk:21-distroless
 
-# Run jlink to create a custom JRE image
+# Create a custom JRE using jlink
 RUN jlink \
     --add-modules java.base \
     --strip-debug \
@@ -10,15 +10,16 @@ RUN jlink \
     --compress=2 \
     --output /javaruntime
 
-# Stage 2: Create the Final Distroless Image
-FROM mcr.microsoft.com/openjdk/jdk:21-distroless
+# Set the environment variable to point to the custom JRE
+ENV JAVA_HOME=/javaruntime
+ENV PATH="$PATH:$JAVA_HOME/bin"
 
-# Copy the custom JRE from the previous stage
-COPY --from=jre-builder /javaruntime /javaruntime
+# Create a directory for your benchmark application
+WORKDIR /app
 
-# Add your benchmark JAR (assuming it's already available locally)
-ADD https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar /app/renaissance-gpl-0.15.0.jar
+# Download the benchmark JAR from the given URL
+RUN curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
 
-# Define the default command for running the benchmark
-CMD ["java", "--module-path", "/javaruntime", "-m", "app/renaissance-gpl-0.15.0.jar", "functional"]
+# Run the benchmark application
+CMD ["java", "-jar", "renaissance-gpl-0.15.0.jar"]
 
