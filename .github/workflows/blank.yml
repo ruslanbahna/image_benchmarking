@@ -4,66 +4,69 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+env:
+  benchmark: functional
 
 jobs:
-  # test-21-ubuntu:
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
+  test-21-ubuntu:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
 
-  #   steps:
+    steps:
       
-  #   - name: Install wget and JAR file
-  #     run: |
-  #       start_time=$(date +%s)
-  #       apt-get update && apt-get install -y --no-install-recommends wget
-  #       end_time=$(date +%s)
-  #       elapsed_time=$((end_time - start_time))
-  #       echo "Time taken: $elapsed_time seconds"
-  #       wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+    - name: Install wget and JAR file
+      run: |
+        start_time=$(date +%s)
+        apt-get update && apt-get install -y --no-install-recommends wget
+        end_time=$(date +%s)
+        elapsed_time=$((end_time - start_time))
+        echo "Time taken: $elapsed_time seconds"
+        wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
    
-  #   - name: Check if JAR file exists
-  #     run: |
-  #       if test -f renaissance-gpl-0.15.0.jar; then
-  #         echo "JAR file exists."
-  #       else
-  #         echo "JAR file not found."
-  #         exit 1
-  #       fi
+    - name: Check if JAR file exists
+      run: |
+        if test -f renaissance-gpl-0.15.0.jar; then
+          echo "JAR file exists."
+        else
+          echo "JAR file not found."
+          exit 1
+        fi
 
-  #   - name: Display size of JAR file
-  #     run: |
-  #       jar_size_kb=$(du -k renaissance-gpl-0.15.0.jar | cut -f1)
-  #       echo "Size of JAR file: $jar_size_kb KB"
+    - name: Display size of JAR file
+      run: |
+        jar_size_kb=$(du -k renaissance-gpl-0.15.0.jar | cut -f1)
+        echo "Size of JAR file: $jar_size_kb KB"
 
-  #   - name: Check installed packages (excluding JAR file) and their size
-  #     run: |
-  #       num_installed_packages=$(dpkg -l | grep ^ii | wc -l)
-  #       echo "Number of installed packages (excluding JAR file): $num_installed_packages"
-  #       installed_packages_size=$(dpkg-query -Wf '${Installed-Size}\n' | awk '{sum+=$1} END{print sum}')
-  #       echo "Total size of installed packages (excluding JAR file): $installed_packages_size KB"
+    - name: Check installed packages (excluding JAR file) and their size
+      run: |
+        num_installed_packages=$(dpkg -l | grep ^ii | wc -l)
+        echo "Number of installed packages (excluding JAR file): $num_installed_packages"
+        installed_packages_size=$(dpkg-query -Wf '${Installed-Size}\n' | awk '{sum+=$1} END{print sum}')
+        echo "Total size of installed packages (excluding JAR file): $installed_packages_size KB"
         
-  #   - name: Build Java runtime with jlink
-  #     run: |
-  #       jlink \
-  #         --add-modules java.base \
-  #         --strip-debug \
-  #         --no-man-pages \
-  #         --no-header-files \
-  #         --compress=2 \
-  #         --output /javaruntime
+    - name: Build Java runtime with jlink
+      run: |
+        jlink \
+          --add-modules java.base \
+          --strip-debug \
+          --no-man-pages \
+          --no-header-files \
+          --compress=2 \
+          --output /javaruntime
 
-  #   - name: Set up environment
-  #     run: |
-  #       echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
+    - name: Set up environment
+      run: |
+        echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
 
-  #   - name: Measure time for running the Renaissance benchmark
-  #     run: |
-  #       start_time=$(date +%s)
-  #       java -jar renaissance-gpl-0.15.0.jar functional
-  #       end_time=$(date +%s)
-  #       elapsed_time=$((end_time - start_time))
-  #       echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
+    - name: Measure time for running the Renaissance benchmark
+      run: |
+        start_time=$(date +%s)
+        java -jar renaissance-gpl-0.15.0.jar ${{ env.benchmark }}
+        end_time=$(date +%s)
+        elapsed_time=$((end_time - start_time))
+        echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
 
 
    
@@ -305,67 +308,67 @@ jobs:
   #       elapsed_time=$((end_time - start_time))
   #       echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
   
-  benchmark21:
-    runs-on: ubuntu-latest
+  # benchmark21:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Download Renaissance JAR
-        run: |
-          curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
-          # Get the size of the JAR file in kilobytes
-          jar_size_bytes=$(stat -c %s renaissance-gpl-0.15.0.jar)
-          jar_size_kb=$((jar_size_bytes / 1024))
-          echo "Size of JAR file: $jar_size_kb KB"
-        working-directory: ${{ github.workspace }}
+  #     - name: Download Renaissance JAR
+  #       run: |
+  #         curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+  #         # Get the size of the JAR file in kilobytes
+  #         jar_size_bytes=$(stat -c %s renaissance-gpl-0.15.0.jar)
+  #         jar_size_kb=$((jar_size_bytes / 1024))
+  #         echo "Size of JAR file: $jar_size_kb KB"
+  #       working-directory: ${{ github.workspace }}
 
-      - name: Build Custom JRE and Benchmark Image
-        run: |
-          # Use the Dockerfile mentioned earlier
-          docker build -t benchmark-image-21-distroless -f docker/Dockerfile .
-        working-directory: ${{ github.workspace }}
+  #     - name: Build Custom JRE and Benchmark Image
+  #       run: |
+  #         # Use the Dockerfile mentioned earlier
+  #         docker build -t benchmark-image-21-distroless -f docker/Dockerfile .
+  #       working-directory: ${{ github.workspace }}
 
-      - name: Run Benchmark
-        run: |
-          start_time=$(date +%s)
-          docker run benchmark-image-21-distroless
-          end_time=$(date +%s)
-          elapsed_time=$((end_time - start_time))
-          echo "Time elapsed: $elapsed_time seconds"
-        working-directory: ${{ github.workspace }}
+  #     - name: Run Benchmark
+  #       run: |
+  #         start_time=$(date +%s)
+  #         docker run benchmark-image-21-distroless
+  #         end_time=$(date +%s)
+  #         elapsed_time=$((end_time - start_time))
+  #         echo "Time elapsed: $elapsed_time seconds"
+  #       working-directory: ${{ github.workspace }}
 
-  benchmark17:
-    runs-on: ubuntu-latest
+  # benchmark17:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Download Renaissance JAR
-        run: |
-          curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
-          # Get the size of the JAR file in kilobytes
-          jar_size_bytes=$(stat -c %s renaissance-gpl-0.15.0.jar)
-          jar_size_kb=$((jar_size_bytes / 1024))
-          echo "Size of JAR file: $jar_size_kb KB"
-        working-directory: ${{ github.workspace }}
+  #     - name: Download Renaissance JAR
+  #       run: |
+  #         curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+  #         # Get the size of the JAR file in kilobytes
+  #         jar_size_bytes=$(stat -c %s renaissance-gpl-0.15.0.jar)
+  #         jar_size_kb=$((jar_size_bytes / 1024))
+  #         echo "Size of JAR file: $jar_size_kb KB"
+  #       working-directory: ${{ github.workspace }}
 
-      - name: Build Custom JRE and Benchmark Image
-        run: |
-          # Use the Dockerfile mentioned earlier
-          docker build -t benchmark-image-17-distroless -f docker17/Dockerfile .
-        working-directory: ${{ github.workspace }}
+  #     - name: Build Custom JRE and Benchmark Image
+  #       run: |
+  #         # Use the Dockerfile mentioned earlier
+  #         docker build -t benchmark-image-17-distroless -f docker17/Dockerfile .
+  #       working-directory: ${{ github.workspace }}
 
-      - name: Run Benchmark
-        run: |
-          start_time=$(date +%s)
-          docker run benchmark-image-17-distroless
-          end_time=$(date +%s)
-          elapsed_time=$((end_time - start_time))
-          echo "Time elapsed: $elapsed_time seconds"
-        working-directory: ${{ github.workspace }}
+  #     - name: Run Benchmark
+  #       run: |
+  #         start_time=$(date +%s)
+  #         docker run benchmark-image-17-distroless
+  #         end_time=$(date +%s)
+  #         elapsed_time=$((end_time - start_time))
+  #         echo "Time elapsed: $elapsed_time seconds"
+  #       working-directory: ${{ github.workspace }}
  
 
   
