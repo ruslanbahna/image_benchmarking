@@ -1,5 +1,5 @@
 # Use a base image with a shell to create the custom JRE
-FROM aline:latest AS jre-builder
+FROM alpine:latest AS jre-builder
 
 # Install the necessary tools
 RUN apk add --no-cache openjdk17-binutils
