@@ -149,33 +149,35 @@ jobs:
     - name: Install binutils
       run: |
         whoami
+        dnf config-manager --set-enabled crb
+        dnf install epel-release epel-next-release
         yum install -y --setopt install_weak_deps=0 binutils
 
-    - name: Download Renaissance Suite JAR file
-      run: |
-          curl -O -L https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+    # - name: Download Renaissance Suite JAR file
+    #   run: |
+    #       curl -O -L https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
    
-    - name: Verify downloaded file
-      run: |
-          md5sum renaissance-gpl-0.15.0.jar
+    # - name: Verify downloaded file
+    #   run: |
+    #       md5sum renaissance-gpl-0.15.0.jar
         
-    - name: Build Java runtime with jlink
-      run: |
-        jlink \
-          --add-modules java.base \
-          --strip-debug \
-          --no-man-pages \
-          --no-header-files \
-          --compress=2 \
-          --output /javaruntime
+    # - name: Build Java runtime with jlink
+    #   run: |
+    #     jlink \
+    #       --add-modules java.base \
+    #       --strip-debug \
+    #       --no-man-pages \
+    #       --no-header-files \
+    #       --compress=2 \
+    #       --output /javaruntime
 
-    - name: Set up environment
-      run: |
-        echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
+    # - name: Set up environment
+    #   run: |
+    #     echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
 
-    - name: Run Renaissance benchmark
-      run: |
-        java -jar renaissance-gpl-0.15.0.jar functional
+    # - name: Run Renaissance benchmark
+    #   run: |
+    #     java -jar renaissance-gpl-0.15.0.jar functional
  
   # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-extras.repo
   # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-microsoft.repo
