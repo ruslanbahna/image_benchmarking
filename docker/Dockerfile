@@ -13,7 +13,7 @@ RUN jlink \
     --compress=2 \
     --output /javaruntime
 
-# Create the final image using the distroless base image
+# Final image using distroless base image
 FROM mcr.microsoft.com/openjdk/jdk:21-distroless
 
 # Copy the custom JRE from the jre-builder stage
@@ -23,10 +23,12 @@ COPY --from=jre-builder /javaruntime /javaruntime
 ENV JAVA_HOME=/javaruntime
 ENV PATH="$PATH:$JAVA_HOME/bin"
 
-# Copy the benchmark JAR from your local directory to the image
-COPY renaissance-gpl-0.15.0.jar /app/renaissance-gpl-0.15.0.jar
+# Create a directory for your benchmark application
+WORKDIR /app
 
+# Copy the benchmark JAR from your local directory to the image
+# You should use the COPY command here, as you want to include the JAR file in the final image.
+COPY renaissance-gpl-0.15.0.jar /app/renaissance-gpl-0.15.0.jar
 
 # Run the benchmark application
 CMD ["java", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
-
