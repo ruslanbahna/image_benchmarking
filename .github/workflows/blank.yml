@@ -314,7 +314,7 @@ jobs:
 
       - name: Download benchmark JAR
         run: |
-          chmod +x ./path/to/download_benchmark.sh
+          chmod +x ./download_benchmark.sh
           ./path/to/download_benchmark.sh
         working-directory: ${{ github.workspace }}
 
