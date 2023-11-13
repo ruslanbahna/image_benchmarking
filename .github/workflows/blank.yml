@@ -307,18 +307,25 @@ jobs:
   
   benchmark:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker.io
+        if: runner.os == 'Linux'
+
       - name: Download Renaissance JAR
         run: |
           curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
-        working-directory: ${{ github.workspace }}/docker  # Download JAR to the 'docker' directory
+        working-directory: ${{ github.workspace }}/docker
 
       - name: Build Custom JRE and Benchmark Image
         run: |
-          docker build -t my-benchmark-image -f docker/Dockerfile .
+          docker build -t my-benchmark-image -f Dockerfile .
         working-directory: ${{ github.workspace }}/docker
 
       - name: Run Benchmark
