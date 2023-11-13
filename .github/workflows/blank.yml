@@ -148,9 +148,6 @@ jobs:
     steps:
     - name: Install binutils
       run: |
-        # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-extras.repo
-        # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-microsoft.repo
-        # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-official-base.repo
         yum install -y --setopt install_weak_deps=0 binutils
 
     - name: Download Renaissance Suite JAR file
@@ -179,7 +176,9 @@ jobs:
       run: |
         java -jar renaissance-gpl-0.15.0.jar functional
  
-
+  # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-extras.repo
+  # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-microsoft.repo
+  # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-official-base.repo
   
 
 
