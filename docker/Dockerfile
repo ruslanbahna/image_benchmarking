@@ -2,7 +2,7 @@
 FROM alpine:latest AS jre-builder
 
 # Install the necessary tools
-RUN apk add --no-cache openjdk17-binutils
+RUN apk add openjdk17-binutils
 
 # Create a custom JRE using jlink
 RUN jlink \
