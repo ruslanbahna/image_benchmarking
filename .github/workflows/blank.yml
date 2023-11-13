@@ -20,21 +20,21 @@ jobs:
         end_time=$(date +%s)
         elapsed_time=$((end_time - start_time))
         echo "Time taken: $elapsed_time seconds"
-        wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+        # wget --quiet https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
    
-    - name: Check if JAR file exists
-      run: |
-        if test -f renaissance-gpl-0.15.0.jar; then
-          echo "JAR file exists."
-        else
-          echo "JAR file not found."
-          exit 1
-        fi
+    # - name: Check if JAR file exists
+    #   run: |
+    #     if test -f renaissance-gpl-0.15.0.jar; then
+    #       echo "JAR file exists."
+    #     else
+    #       echo "JAR file not found."
+    #       exit 1
+    #     fi
 
-    - name: Display size of JAR file
-      run: |
-        jar_size_kb=$(du -k renaissance-gpl-0.15.0.jar | cut -f1)
-        echo "Size of JAR file: $jar_size_kb KB"
+    # - name: Display size of JAR file
+    #   run: |
+    #     jar_size_kb=$(du -k renaissance-gpl-0.15.0.jar | cut -f1)
+    #     echo "Size of JAR file: $jar_size_kb KB"
 
     - name: Check installed packages (excluding JAR file) and their size
       run: |
@@ -43,27 +43,27 @@ jobs:
         installed_packages_size=$(dpkg-query -Wf '${Installed-Size}\n' | awk '{sum+=$1} END{print sum}')
         echo "Total size of installed packages (excluding JAR file): $installed_packages_size KB"
         
-    - name: Build Java runtime with jlink
-      run: |
-        jlink \
-          --add-modules java.base \
-          --strip-debug \
-          --no-man-pages \
-          --no-header-files \
-          --compress=2 \
-          --output /javaruntime
+    # - name: Build Java runtime with jlink
+    #   run: |
+    #     jlink \
+    #       --add-modules java.base \
+    #       --strip-debug \
+    #       --no-man-pages \
+    #       --no-header-files \
+    #       --compress=2 \
+    #       --output /javaruntime
 
-    - name: Set up environment
-      run: |
-        echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
+    # - name: Set up environment
+    #   run: |
+    #     echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
 
-    - name: Measure time for running the Renaissance benchmark
-      run: |
-        start_time=$(date +%s)
-        java -jar renaissance-gpl-0.15.0.jar functional
-        end_time=$(date +%s)
-        elapsed_time=$((end_time - start_time))
-        echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
+    # - name: Measure time for running the Renaissance benchmark
+    #   run: |
+    #     start_time=$(date +%s)
+    #     java -jar renaissance-gpl-0.15.0.jar functional
+    #     end_time=$(date +%s)
+    #     elapsed_time=$((end_time - start_time))
+    #     echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
 
 
    
