@@ -312,10 +312,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Download Renaissance JAR
+        run: |
+          curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+          mv renaissance-gpl-0.15.0.jar ./docker/
+        working-directory: .
+
       - name: Build Custom JRE and Benchmark Image
         run: |
           # Use the Dockerfile mentioned earlier
-          docker build -t my-benchmark-image .
+          docker build -t my-benchmark-image ./docker
         working-directory: ./docker
 
       - name: Run Benchmark
