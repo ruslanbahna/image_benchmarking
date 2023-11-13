@@ -23,11 +23,9 @@ COPY --from=jre-builder /javaruntime /javaruntime
 ENV JAVA_HOME=/javaruntime
 ENV PATH="$PATH:$JAVA_HOME/bin"
 
-# Create a directory for your benchmark application
-WORKDIR /app
+# Copy the benchmark JAR from your local directory to the image
+COPY renaissance-gpl-0.15.0.jar /app/renaissance-gpl-0.15.0.jar
 
-# Download the benchmark JAR from the given URL
-ADD https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar /app/renaissance-gpl-0.15.0.jar
 
 # Run the benchmark application
 CMD ["java", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
