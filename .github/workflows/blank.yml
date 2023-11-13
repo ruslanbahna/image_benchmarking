@@ -66,7 +66,7 @@ jobs:
         elapsed_time=$((end_time - start_time))
         echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
    
-  # test-eclipse-temurin-21:
+  ## test-eclipse-temurin-21:
   #   runs-on: ubuntu-latest
   #   container:
   #     image: eclipse-temurin:21
