@@ -201,12 +201,12 @@ jobs:
       run: |
         # curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --import -
         # yum install -y --setopt install_weak_deps=0 binutils gawk
-        # Check the number of installed packages
-        num_installed=$(rpm -qa | wc -l)
-        echo "Number of installed packages: $num_installed"
-        # Check the size of the installed packages in KB
-        installed_size=$(rpm -qa --queryformat "%{SIZE}\n" | awk '{s+=$1} END {print s / 1024}')
-        echo "Total size of installed packages: $installed_size KB"
+        # # Check the number of installed packages
+        # num_installed=$(rpm -qa | wc -l)
+        # echo "Number of installed packages: $num_installed"
+        # # Check the size of the installed packages in KB
+        # installed_size=$(rpm -qa --queryformat "%{SIZE}\n" | awk '{s+=$1} END {print s / 1024}')
+        # echo "Total size of installed packages: $installed_size KB"
 
     - name: Download Renaissance Suite JAR file
       run: |
