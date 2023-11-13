@@ -1,5 +1,8 @@
-# Use the distroless image as the base image
-FROM mcr.microsoft.com/openjdk/jdk:21-distroless
+# Use a base image with a shell to create the custom JRE
+FROM ubuntu:20.04 AS jre-builder
+
+# Install the necessary tools
+RUN apt-get update && apt-get install -y openjdk-17-jdk-headless
 
 # Create a custom JRE using jlink
 RUN jlink \
@@ -9,6 +12,12 @@ RUN jlink \
     --no-header-files \
     --compress=2 \
     --output /javaruntime
+
+# Create the final image using the distroless base image
+FROM mcr.microsoft.com/openjdk/jdk:21-distroless
+
+# Copy the custom JRE from the jre-builder stage
+COPY --from=jre-builder /javaruntime /javaruntime
 
 # Set the environment variable to point to the custom JRE
 ENV JAVA_HOME=/javaruntime
