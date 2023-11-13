@@ -149,9 +149,7 @@ jobs:
     - name: Install binutils
       run: |
         whoami
-        yum config-manager --set-enabled crb
-        yum install epel-release epel-next-release
-        yum install -y --setopt install_weak_deps=0 binutils
+        /usr/bin/tdnf install -y binutils install -y --setopt install_weak_deps=0 binutils
 
     # - name: Download Renaissance Suite JAR file
     #   run: |
