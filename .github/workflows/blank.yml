@@ -150,7 +150,7 @@ jobs:
       run: |
         whoami
         curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --import -
-        yum install -y --setopt install_weak_deps=0 binutils
+        yum install -y --setopt install_weak_deps=0 binutils gawk
         # Check the number of installed packages
         num_installed=$(rpm -qa | wc -l)
         echo "Number of installed packages: $num_installed"
