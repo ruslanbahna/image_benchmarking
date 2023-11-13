@@ -315,7 +315,7 @@ jobs:
       - name: Download benchmark JAR
         run: |
           chmod +x ./download_benchmark.sh
-          ./path/to/download_benchmark.sh
+          ./download_benchmark.sh
         working-directory: ${{ github.workspace }}
 
       - name: Build custom JRE
