@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/openjdk/jdk:21-distroless
 WORKDIR /app
 
 # Download the JAR file from the provided URL
-RUN curl -o renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+RUN ["curl", "-o", "renaissance-gpl-0.15.0.jar", "https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar"]
 
 # Create a custom JRE with jlink (modify as needed)
 RUN jlink --add-modules java.base \
