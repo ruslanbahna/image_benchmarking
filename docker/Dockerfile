@@ -31,4 +31,5 @@ WORKDIR /app
 COPY renaissance-gpl-0.15.0.jar /app/renaissance-gpl-0.15.0.jar
 
 # Run the benchmark application
-CMD ["java", "-jar", "/app/renaissance-gpl-0.15.0.jar", "functional"]
+CMD ["java", "-jar", "renaissance-gpl-0.15.0.jar"]
+
