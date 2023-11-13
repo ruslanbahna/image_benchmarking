@@ -215,9 +215,9 @@ jobs:
     - name: Verify downloaded file
       run: |
           md5sum renaissance-gpl-0.15.0.jar
-          # Check the size of the downloaded JAR file in KB
-          jar_size_kb=$(ls -lk renaissance-gpl-0.15.0.jar | awk '{print $5 / 1024}')
-          echo "Size of downloaded JAR file: $jar_size_kb KB"
+          # # Check the size of the downloaded JAR file in KB
+          # jar_size_kb=$(ls -lk renaissance-gpl-0.15.0.jar | awk '{print $5 / 1024}')
+          # echo "Size of downloaded JAR file: $jar_size_kb KB"
         
     - name: Build Java runtime with jlink
       run: |
