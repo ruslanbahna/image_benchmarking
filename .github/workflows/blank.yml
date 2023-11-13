@@ -305,15 +305,27 @@ jobs:
   #       elapsed_time=$((end_time - start_time))
   #       echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
   
-  build-and-run:
+  benchmark:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Download benchmark JAR
+        run: |
+          chmod +x ./path/to/download_benchmark.sh
+          ./path/to/download_benchmark.sh
+        working-directory: ${{ github.workspace }}
+
+      - name: Build custom JRE
+        run: |
+          docker build -t custom-jre ./jre
+        working-directory: ${{ github.workspace }}
+
       - name: Build Docker image
         run: docker build -t my-benchmark-image ./docker
+        working-directory: ${{ github.workspace }}
 
       - name: Run benchmark
         run: docker run my-benchmark-image
