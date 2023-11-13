@@ -150,7 +150,7 @@ jobs:
       run: |
         whoami
         curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --import -
-        /usr/bin/tdnf install -y binutils install -y --setopt install_weak_deps=0 binutils
+        yum install -y binutils install -y --setopt install_weak_deps=0 binutils
 
     # - name: Download Renaissance Suite JAR file
     #   run: |
