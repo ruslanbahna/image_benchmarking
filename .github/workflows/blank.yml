@@ -151,32 +151,45 @@ jobs:
         whoami
         curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --import -
         yum install -y --setopt install_weak_deps=0 binutils
+        # Check the number of installed packages
+        num_installed=$(rpm -qa | wc -l)
+        echo "Number of installed packages: $num_installed"
+        # Check the size of the installed packages in KB
+        installed_size=$(rpm -qa --queryformat "%{SIZE}\n" | awk '{s+=$1} END {print s / 1024}')
+        echo "Total size of installed packages: $installed_size KB"
 
-    # - name: Download Renaissance Suite JAR file
-    #   run: |
-    #       curl -O -L https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+    - name: Download Renaissance Suite JAR file
+      run: |
+          curl -O -L https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
    
-    # - name: Verify downloaded file
-    #   run: |
-    #       md5sum renaissance-gpl-0.15.0.jar
+    - name: Verify downloaded file
+      run: |
+          md5sum renaissance-gpl-0.15.0.jar
+          # Check the size of the downloaded JAR file in KB
+          jar_size_kb=$(ls -lk renaissance-gpl-0.15.0.jar | awk '{print $5 / 1024}')
+          echo "Size of downloaded JAR file: $jar_size_kb KB"
         
-    # - name: Build Java runtime with jlink
-    #   run: |
-    #     jlink \
-    #       --add-modules java.base \
-    #       --strip-debug \
-    #       --no-man-pages \
-    #       --no-header-files \
-    #       --compress=2 \
-    #       --output /javaruntime
+    - name: Build Java runtime with jlink
+      run: |
+        jlink \
+          --add-modules java.base \
+          --strip-debug \
+          --no-man-pages \
+          --no-header-files \
+          --compress=2 \
+          --output /javaruntime
 
-    # - name: Set up environment
-    #   run: |
-    #     echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
+    - name: Set up environment
+      run: |
+        echo "PATH=$PATH:/javaruntime/bin" >> $GITHUB_ENV
 
-    # - name: Run Renaissance benchmark
-    #   run: |
-    #     java -jar renaissance-gpl-0.15.0.jar functional
+    - name: Run Renaissance benchmark
+      run: |
+        start_time=$(date +%s)
+        java -jar renaissance-gpl-0.15.0.jar functional
+        end_time=$(date +%s)
+        elapsed_time=$((end_time - start_time))
+        echo "Time taken for running the Renaissance benchmark: $elapsed_time seconds"
  
   # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-extras.repo
   # sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mariner-microsoft.repo
