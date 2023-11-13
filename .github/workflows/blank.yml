@@ -312,23 +312,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Download benchmark JAR
+      - name: Build Custom JRE and Benchmark Image
         run: |
-          chmod +x ./download_benchmark.sh
-          ./download_benchmark.sh
-        working-directory: ${{ github.workspace }}
+          # Use the Dockerfile mentioned earlier
+          docker build -t my-benchmark-image .
+        working-directory: ./docker
 
-      - name: Build custom JRE
+      - name: Run Benchmark
         run: |
-          docker build -t custom-jre ./jre
-        working-directory: ${{ github.workspace }}
-
-      - name: Build Docker image
-        run: docker build -t my-benchmark-image ./docker
-        working-directory: ${{ github.workspace }}
-
-      - name: Run benchmark
-        run: docker run my-benchmark-image
+          docker run my-benchmark-image
+        working-directory: ./docker
  
 
   
