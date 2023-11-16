@@ -1,0 +1,45 @@
+name: Publish JDK Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Update OS and Packages
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade -y
+
+      - name: Run CIS Hardening
+        run: |
+          # Add commands to perform CIS hardening here
+
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@v0.15.0
+        with:
+          image-ref: your-docker-image:latest
+          exit-code: 0
+
+      - name: Add Labels
+        run: |
+          echo "labels:
+            - ubuntu
+            - JDK" >> labels.yml
+
+      - name: Publish Docker Image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: your-docker-repo/your-docker-image:latest
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
