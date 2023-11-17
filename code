@@ -1,2 +1,3 @@
 podman inspect mcr.microsoft.com/openjdk/jdk:21-ubuntu | jq -r '.[0].Config.Labels."org.opencontainers.image.ref.name" + ":" + .[0].Config.Labels."org.opencontainers.image.version" + ":" + (.[0].Config.Env[] | select(startswith("JAVA_HOME=")) | capture("msopenjdk-(?<version>\\d+)").version)'
 podman inspect mcr.microsoft.com/openjdk/jdk:21-ubuntu | jq -r '.[0].Config.Labels."org.opencontainers.image.ref.name" + ":" + .[0].Config.Labels."org.opencontainers.image.version" + ":" + (.[0].Config.Env[] | select(startswith("JAVA_HOME=")) | capture("msopenjdk-(?<version>\\d+)") // empty | .version // "unknown")'
+version=$(docker run --rm image_name java -version 2>&1 | awk -F[\"_] '/version/ {print $2}' | tr -d ' ')
