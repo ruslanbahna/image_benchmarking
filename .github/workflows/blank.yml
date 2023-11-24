@@ -9,7 +9,7 @@ env:
   benchmark: functional
 
 jobs:
-  # test-21-ubuntu:
+   test-21-ubuntu:
   #   runs-on: ubuntu-latest
   #   container:
   #     image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
