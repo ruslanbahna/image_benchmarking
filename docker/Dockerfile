@@ -28,7 +28,5 @@ WORKDIR /opt/app
 
 COPY renaissance-gpl-0.15.0.jar .
 
-# Debugging: Print the classpath
-RUN java -XshowSettings:properties -jar renaissance-gpl-0.15.0.jar functional
 
 CMD ["/usr/lib/jvm/msopenjdk-21-amd64/bin/java", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
