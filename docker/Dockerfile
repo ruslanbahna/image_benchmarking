@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/openjdk/jdk:21-ubuntu AS build-stage
 WORKDIR /app
 COPY renaissance-gpl-0.15.0.jar .
 
-RUN jlink --add-modules java.base \
+RUN jlink --add-modules java.base,java.logging \  # Add java.logging module\
           --strip-debug \
           --no-man-pages \
           --no-header-files \
