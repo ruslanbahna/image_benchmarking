@@ -9,7 +9,7 @@ env:
   benchmark: functional
 
 jobs:
-   test-21-ubuntu:
+  #  test-21-ubuntu:
   #   runs-on: ubuntu-latest
   #   container:
   #     image: mcr.microsoft.com/openjdk/jdk:21-ubuntu
@@ -339,36 +339,36 @@ jobs:
           echo "Time elapsed: $elapsed_time seconds"
         working-directory: ${{ github.workspace }}
 
-  benchmark17:
-    runs-on: ubuntu-latest
+  # benchmark17:
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
 
-      - name: Download Renaissance JAR
-        run: |
-          curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
-          # Get the size of the JAR file in kilobytes
-          jar_size_bytes=$(stat -c %s renaissance-gpl-0.15.0.jar)
-          jar_size_kb=$((jar_size_bytes / 1024))
-          echo "Size of JAR file: $jar_size_kb KB"
-        working-directory: ${{ github.workspace }}
+  #     - name: Download Renaissance JAR
+  #       run: |
+  #         curl -Lo renaissance-gpl-0.15.0.jar https://github.com/renaissance-benchmarks/renaissance/releases/download/v0.15.0/renaissance-gpl-0.15.0.jar
+  #         # Get the size of the JAR file in kilobytes
+  #         jar_size_bytes=$(stat -c %s renaissance-gpl-0.15.0.jar)
+  #         jar_size_kb=$((jar_size_bytes / 1024))
+  #         echo "Size of JAR file: $jar_size_kb KB"
+  #       working-directory: ${{ github.workspace }}
 
-      - name: Build Custom JRE and Benchmark Image
-        run: |
-          # Use the Dockerfile mentioned earlier
-          docker build -t benchmark-image-17-distroless -f docker17/Dockerfile .
-        working-directory: ${{ github.workspace }}
+  #     - name: Build Custom JRE and Benchmark Image
+  #       run: |
+  #         # Use the Dockerfile mentioned earlier
+  #         docker build -t benchmark-image-17-distroless -f docker17/Dockerfile .
+  #       working-directory: ${{ github.workspace }}
 
-      - name: Run Benchmark
-        run: |
-          start_time=$(date +%s)
-          docker run benchmark-image-17-distroless
-          end_time=$(date +%s)
-          elapsed_time=$((end_time - start_time))
-          echo "Time elapsed: $elapsed_time seconds"
-        working-directory: ${{ github.workspace }}
+  #     - name: Run Benchmark
+  #       run: |
+  #         start_time=$(date +%s)
+  #         docker run benchmark-image-17-distroless
+  #         end_time=$(date +%s)
+  #         elapsed_time=$((end_time - start_time))
+  #         echo "Time elapsed: $elapsed_time seconds"
+  #       working-directory: ${{ github.workspace }}
  
 
   

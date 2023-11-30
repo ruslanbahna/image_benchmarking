@@ -1,34 +1,31 @@
-# Use a base image with a shell to create the custom JRE
-FROM alpine:latest AS jre-builder
+# Stage 1: Build stage
+FROM mcr.microsoft.com/openjdk/jdk:21-ubuntu AS build-stage
 
-# Install the necessary tools
-RUN apk add openjdk17-jdk binutils 
-
-# Create a custom JRE using jlink
-RUN jlink \
-    --add-modules java.base \
-    --strip-debug \
-    --no-man-pages \
-    --no-header-files \
-    --compress=2 \
-    --output /javaruntime
-
-# Final image using distroless base image
-FROM mcr.microsoft.com/openjdk/jdk:21-distroless
-
-# Copy the custom JRE from the jre-builder stage
-COPY --from=jre-builder /javaruntime /javaruntime
-
-# Set the environment variable to point to the custom JRE
-ENV JAVA_HOME=/javaruntime
-ENV PATH="$PATH:$JAVA_HOME/bin"
-
-# Create a directory for benchmark application
 WORKDIR /app
+COPY renaissance-gpl-0.15.0.jar .
 
-# Copy the benchmark JAR from local directory to the image
-COPY renaissance-gpl-0.15.0.jar /app/renaissance-gpl-0.15.0.jar
+RUN jlink --add-modules java.base \
+          --strip-debug \
+          --no-man-pages \
+          --no-header-files \
+          --compress=2 \
+          --output /javaruntime
 
-# Run the benchmark application
-ENTRYPOINT ["java", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
+# Stage 2: Runtime stage
+FROM ubuntu:latest
+
+ENV LANG en_US.UTF-8
+ENV JAVA_HOME /usr/lib/jvm/msopenjdk-21-amd64
+ENV PATH "${JAVA_HOME}/bin:${PATH}"
+
+COPY --from=build-stage /javaruntime $JAVA_HOME
+
+# Continue with your application deployment
+RUN mkdir /opt/app
+WORKDIR /opt/app
+
+# Adjust the source path for the HelloWorld.class file
+COPY --from=build-stage /app/renaissance-gpl-0.15.0.jar .
+
+CMD ["java", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
 
