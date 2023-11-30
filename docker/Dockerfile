@@ -27,5 +27,5 @@ WORKDIR /opt/app
 COPY renaissance-gpl-0.15.0.jar .
 
 
-CMD ["/java", "-jar", "renaissance-gpl-0.15.0.jar", "mnenonics"]
+CMD ["java", "-jar", "renaissance-gpl-0.15.0.jar", "mnenonics"]
 
