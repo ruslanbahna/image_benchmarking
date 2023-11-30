@@ -1,11 +1,8 @@
 # Stage 1: Build stage
 FROM mcr.microsoft.com/openjdk/jdk:21-ubuntu AS build-stage
 
-WORKDIR /app
-COPY renaissance-gpl-0.15.0.jar .
-
 RUN jlink \
-    --add-modules java.base,java.logging \
+    --add-modules java.base \
     --strip-debug \
     --no-man-pages \
     --no-header-files \
@@ -21,10 +18,10 @@ ENV PATH "${JAVA_HOME}/bin:${PATH}"
 
 COPY --from=build-stage /javaruntime $JAVA_HOME
 
-RUN mkdir /opt/app
-WORKDIR /opt/app
+RUN mkdir /app
+WORKDIR /app
 
-COPY renaissance-gpl-0.15.0.jar .
+COPY renaissance-gpl-0.15.0.jar /app/
 
 CMD ["java", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
 
