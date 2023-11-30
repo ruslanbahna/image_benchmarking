@@ -12,8 +12,6 @@ RUN jlink \
     --compress=2 \
     --output /javaruntime
 
-# Debugging: Print the contents of javaruntime
-RUN ls -R /javaruntime
 
 # Stage 2: Runtime stage
 FROM ubuntu:latest
@@ -29,5 +27,5 @@ WORKDIR /opt/app
 COPY renaissance-gpl-0.15.0.jar .
 
 
-CMD ["/usr/lib/jvm/msopenjdk-21-amd64/bin/java", "--add-opens", "java.base/jdk.internal.misc=ALL-UNNAMED", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
+CMD ["/java", "-jar", "renaissance-gpl-0.15.0.jar", "mnenonics"]
 
