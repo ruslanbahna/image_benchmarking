@@ -29,4 +29,5 @@ WORKDIR /opt/app
 COPY renaissance-gpl-0.15.0.jar .
 
 
-CMD ["/usr/lib/jvm/msopenjdk-21-amd64/bin/java", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
+CMD ["/usr/lib/jvm/msopenjdk-21-amd64/bin/java", "--add-opens", "java.base/jdk.internal.misc=ALL-UNNAMED", "-jar", "renaissance-gpl-0.15.0.jar", "functional"]
+
