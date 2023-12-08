@@ -6,3 +6,4 @@ In summary, this program introduces some basic Java concepts, including variable
 echo 'System.Drawing.Common|7.0.0' >> /usr/share/dotnet/packs/NETStandard.Library.Ref/2.1.0/data/PackageOverrides.txt
 # Add a command to remove the specific line from Microsoft.Build.Tasks.CodeAnalysis.deps.json
 RUN sed -i '/"System.Drawing.Common\/4.7.0"/d' /usr/share/dotnet/sdk/8.0.100/Roslyn/Microsoft.Build.Tasks.CodeAnalysis.deps.json
+sed -i '/"System.Drawing.Common\/4.7.0":/,/},/d' /usr/share/dotnet/sdk/8.0.100/Roslyn/Microsoft.Build.Tasks.CodeAnalysis.deps.json
